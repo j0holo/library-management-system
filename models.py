@@ -1,6 +1,7 @@
 from peewee import *
 
-db = MySQLDatabase(host='localhost',
+# Should change this to read from config file
+db = MySQLDatabase(host='192.168.1.56',
                    user='unittest',
                    password='test_db',
                    database='test_db',
@@ -14,8 +15,19 @@ class BaseModel(Model):
 
 class Publisher(BaseModel):
     id = PrimaryKeyField()
-    name = CharField()
-    summary = TextField()
+    name = CharField(max_length=256)
+
+    @staticmethod
+    def add_publisher(name):
+        if len(name) < 266:
+            return Publisher.create(name=name)
+        return None
+
+
+class Author(BaseModel):
+    id = PrimaryKeyField()
+    name = CharField(max_length=256)
+    biography = TextField()
     age = SmallIntegerField()
 
 
@@ -23,7 +35,7 @@ class Book(BaseModel):
     id = PrimaryKeyField()
     isbn = CharField(unique=True)
     title = CharField(max_length=32)
-    author = CharField(max_length=256)
+    author_id = ForeignKeyField(Author, related_name='written_by')
     published_id = ForeignKeyField(Publisher,
                                    related_name='published_by')
     amount_of_pages = SmallIntegerField()
@@ -80,7 +92,7 @@ class Administrator(BaseModel):
 
 if __name__ == "__main__":
     db.connect()
-    db.create_tables([Publisher, Book, Amount, Genre,
+    db.create_tables([Publisher, Author, Book, Amount, Genre,
                      BookGenre, Customer, Review, Administrator],
                      safe=True)
     print("done")

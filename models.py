@@ -16,11 +16,12 @@ class BaseModel(Model):
 class Publisher(BaseModel):
     id = PrimaryKeyField()
     name = CharField(max_length=256)
+    city = CharField(max_length=256)
 
     @staticmethod
-    def add_publisher(name):
-        if len(name) < 266:
-            return Publisher.create(name=name)
+    def add_publisher(name, city):
+        if len(name) <= 265 and len(city) <= 256:
+            return Publisher.create(name=name, city=city)
         return None
 
 
@@ -90,8 +91,10 @@ class Administrator(BaseModel):
     password = CharField(max_length=128)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     db.connect()
+    db.drop_tables([Administrator, Review, Customer, Genre, BookGenre,
+                   Book, Publisher, Author, Amount], safe=True, cascade=True)
     db.create_tables([Publisher, Author, Book, Amount, Genre,
                      BookGenre, Customer, Review, Administrator],
                      safe=True)

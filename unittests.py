@@ -36,11 +36,10 @@ class TestPublisherModel(unittest.TestCase):
         self.assertFalse(publisher)
 
     def test_add_publisher_city_length(self):
-        publisher_name = "Brithish Books"
+        publisher_name = "British Books"
         city = "a" * 266
         publisher = Publisher.add_publisher(name=publisher_name,
                                             city=city)
-        # publisher should be None
         self.assertFalse(publisher)
 
 if __name__ == '__main__':

@@ -45,15 +45,9 @@ class Book(BaseModel):
     summary = TextField()
     published_at = DateField(formats="%Y-%m-%d")
     language = CharField(max_length=64)
-
-
-class Amount(BaseModel):
-    id = PrimaryKeyField()
-    book_id = ForeignKeyField(Book)
-    paperback = SmallIntegerField()
-    hardcover = SmallIntegerField()
-    pdf = SmallIntegerField()
-    ebook = SmallIntegerField()
+    # types: hardcover, paperback, pdf, e-book
+    book_type = CharField(max_length=16)
+    amount = SmallIntegerField()
 
 
 class Genre(BaseModel):
@@ -76,6 +70,14 @@ class Customer(BaseModel):
     surname = CharField(max_length=128)
 
 
+class Lend(BaseModel):
+    id = PrimaryKeyField()
+    book_id = ForeignKeyField(Book)
+    customer_id = ForeignKeyField(Customer, related_name='borrowed_by')
+    return_date = DateField(formats="%Y-%m-%d")
+    returned_at = DateField(formats="%Y-%m-%d")
+
+
 class Review(BaseModel):
     id = PrimaryKeyField()
     customer_id = ForeignKeyField(Customer, related_name='reviewed_by')
@@ -93,9 +95,13 @@ class Administrator(BaseModel):
 
 if __name__ == '__main__':
     db.connect()
-    db.drop_tables([Administrator, Review, Customer, Genre, BookGenre,
-                   Book, Publisher, Author, Amount], safe=True, cascade=True)
-    db.create_tables([Publisher, Author, Book, Amount, Genre,
-                     BookGenre, Customer, Review, Administrator],
+    print("Deleting tables")
+    db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
+                   Book, Publisher, Author], safe=True, cascade=True)
+    print("Tables deleted")
+    print("Creating new tables")
+    db.create_tables([Publisher, Author, Book, Genre,
+                     BookGenre, Customer, Lend, Review, Administrator],
                      safe=True)
+    print("Tables created")
     print("done")

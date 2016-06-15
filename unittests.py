@@ -42,5 +42,16 @@ class TestPublisherModel(unittest.TestCase):
                                             city=city)
         self.assertFalse(publisher)
 
+    def test_select_all_publishers(self):
+        Publisher.create(name="The German Writters",
+                         city="Berlin")
+        publishers = Publisher.select_all()
+        self.assertTrue(any(publisher.name == "The German Writters"
+                        for publisher in publishers))
+
+    def test_select_all_publishers_no_entries(self):
+        publishers = Publisher.select_all()
+        self.assertTrue(publishers is None)
+
 if __name__ == '__main__':
     unittest.main()

@@ -24,6 +24,13 @@ class Publisher(BaseModel):
             return Publisher.create(name=name, city=city)
         return None
 
+    @staticmethod
+    def select_all():
+        publishers = Publisher.select()
+        if publishers:
+            return publishers
+        return None
+
 
 class Author(BaseModel):
     id = PrimaryKeyField()
@@ -37,7 +44,7 @@ class Book(BaseModel):
     isbn = CharField(unique=True)
     title = CharField(max_length=32)
     author_id = ForeignKeyField(Author, related_name='written_by')
-    published_id = ForeignKeyField(Publisher,
+    publisher_id = ForeignKeyField(Publisher,
                                    related_name='published_by')
     amount_of_pages = SmallIntegerField()
     book_print = SmallIntegerField()

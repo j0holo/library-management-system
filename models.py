@@ -1,20 +1,45 @@
 import os
 from peewee import *
 
-db = MySQLDatabase(host=os.getenv('DB_HOST', 'localhost'),
-                   user='unittest',
-                   password='test_db',
-                   database='test_db',
-                   charset='utf8')
+db = MySQLDatabase(None)
 
+# TO-DO: create two functions that will create/update
+# the unittest and development databases
+def refresh_unittest_db():
+    db.init(host=os.getenv('DB_HOST', 'localhost'),
+        user='unittest',
+        password='test_db',
+        database='test_db',
+        charset='utf8')
+    db.connect()
+    print("Deleting unittest tables")
+    db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
+                   Book, Publisher, Author], safe=True, cascade=True)
+    print("Tables deleted")
+    print("Creating new tables")
+    db.create_tables([Publisher, Author, Book, Genre,
+                     BookGenre, Customer, Lend, Review, Administrator],
+                     safe=True)
+    print("Tables created")
+    print("done\n\n")
 
-def create_db(host, user, password, database, charset):
-    global db
-    db = MySQLDatabase(host=host,
-                       user=user,
-                       password=password,
-                       database=password,
-                       charset=charset)
+def refresh_development_db():
+    db.init(host=os.getenv('DB_HOST', 'localhost'),
+        user='development',
+        password='devpassword',
+        database='devdatabase',
+        charset='utf8')
+    db.connect()
+    print("Deleting development tables")
+    db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
+                   Book, Publisher, Author], safe=True, cascade=True)
+    print("Tables deleted")
+    print("Creating new tables")
+    db.create_tables([Publisher, Author, Book, Genre,
+                     BookGenre, Customer, Lend, Review, Administrator],
+                     safe=True)
+    print("Tables created")
+    print("done\n\n")
 
 
 class BaseModel(Model):
@@ -110,14 +135,5 @@ class Administrator(BaseModel):
 
 
 if __name__ == '__main__':
-    db.connect()
-    print("Deleting tables")
-    db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
-                   Book, Publisher, Author], safe=True, cascade=True)
-    print("Tables deleted")
-    print("Creating new tables")
-    db.create_tables([Publisher, Author, Book, Genre,
-                     BookGenre, Customer, Lend, Review, Administrator],
-                     safe=True)
-    print("Tables created")
-    print("done")
+    refresh_unittest_db()
+    refresh_development_db()

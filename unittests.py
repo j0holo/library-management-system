@@ -1,5 +1,5 @@
 import unittest
-
+import os
 from models import *
 
 
@@ -55,4 +55,9 @@ class TestPublisherModel(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    db.init(host=os.getenv('DB_HOST', 'localhost'),
+            user='unittest',
+            password='test_db',
+            database='test_db',
+            charset='utf8')
     unittest.main()

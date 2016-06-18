@@ -53,5 +53,6 @@ class TestPublisherModel(unittest.TestCase):
         publishers = Publisher.select_all()
         self.assertTrue(publishers is None)
 
+
 if __name__ == '__main__':
     unittest.main()

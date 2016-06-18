@@ -1,11 +1,20 @@
+import os
 from peewee import *
 
-# Should change this to read from config file
-db = MySQLDatabase(host='192.168.1.56',
+db = MySQLDatabase(host=os.getenv('DB_HOST', 'localhost'),
                    user='unittest',
                    password='test_db',
                    database='test_db',
                    charset='utf8')
+
+
+def create_db(host, user, password, database, charset):
+    global db
+    db = MySQLDatabase(host=host,
+                       user=user,
+                       password=password,
+                       database=password,
+                       charset=charset)
 
 
 class BaseModel(Model):
@@ -54,7 +63,7 @@ class Book(BaseModel):
     language = CharField(max_length=64)
     # types: hardcover, paperback, pdf, e-book
     book_type = CharField(max_length=16)
-    amount = SmallIntegerField()
+    amount = SmallIntegerField(default=0)
 
 
 class Genre(BaseModel):

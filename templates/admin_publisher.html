@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - publishers</title>
+</head>
+<body>
+    <table>
+    {%  for publisher in publishers %}
+        <tr>
+            <td>{{ publisher.name }}</td>
+            <td>{{ publisher.city }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</body>
+</html>

@@ -3,14 +3,13 @@ from peewee import *
 
 db = MySQLDatabase(None)
 
-# TO-DO: create two functions that will create/update
-# the unittest and development databases
+
 def refresh_unittest_db():
     db.init(host=os.getenv('DB_HOST', 'localhost'),
-        user='unittest',
-        password='test_db',
-        database='test_db',
-        charset='utf8')
+            user='unittest',
+            password='test_db',
+            database='test_db',
+            charset='utf8')
     db.connect()
     print("Deleting unittest tables")
     db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
@@ -23,12 +22,13 @@ def refresh_unittest_db():
     print("Tables created")
     print("done\n\n")
 
+
 def refresh_development_db():
     db.init(host=os.getenv('DB_HOST', 'localhost'),
-        user='development',
-        password='devpassword',
-        database='devdatabase',
-        charset='utf8')
+            user='development',
+            password='devpassword',
+            database='devdatabase',
+            charset='utf8')
     db.connect()
     print("Deleting development tables")
     db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
@@ -86,7 +86,7 @@ class Book(BaseModel):
     summary = TextField()
     published_at = DateField(formats="%Y-%m-%d")
     language = CharField(max_length=64)
-    # types: hardcover, paperback, pdf, e-book
+    # types: hardcover, paperback, pdf, e-book etc.
     book_type = CharField(max_length=16)
     amount = SmallIntegerField(default=0)
 

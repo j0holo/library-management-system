@@ -13,6 +13,7 @@ class TestPublisherModel(unittest.TestCase):
         q.execute()
         db.close()
 
+    # add_publisher()
     def test_add_publisher_returns_publisher(self):
         new_publisher = Publisher.add_publisher(
             name="Books from Holland", city="Amsterdam")
@@ -42,6 +43,7 @@ class TestPublisherModel(unittest.TestCase):
                                             city=city)
         self.assertFalse(publisher)
 
+    # select_all()
     def test_select_all_publishers(self):
         Publisher.create(name="The German Writters",
                          city="Berlin")
@@ -52,6 +54,36 @@ class TestPublisherModel(unittest.TestCase):
     def test_select_all_publishers_no_entries(self):
         publishers = Publisher.select_all()
         self.assertTrue(publishers is None)
+
+    # update_selected()
+    def test_update_publisher(self):
+        publisher = Publisher.create(name="test", city="city")
+        Publisher.update_selected(publisher, "new_test", "new_city")
+        new_publisher = Publisher.get(Publisher.name == "new_test")
+        self.assertEqual(new_publisher.city, "new_city")
+        self.assertEqual(new_publisher.name, "new_test")
+
+    def test_update_only_name(self):
+        publisher = Publisher.create(name="name", city="city")
+        Publisher.update_selected(publisher, "new_name")
+        new_publisher = Publisher.get(Publisher.name == "new_name")
+        self.assertEqual(new_publisher.name, "new_name")
+        self.assertEqual(new_publisher.city, "city")
+
+    def test_update_only_city(self):
+        publisher = Publisher.create(name="name", city="city")
+        Publisher.update_selected(publisher, city="new_city")
+        new_publisher = Publisher.get(Publisher.name == "name")
+        self.assertEqual(new_publisher.name, "name")
+        self.assertEqual(new_publisher.city, "new_city")
+
+    def test_update_string_length(self):
+        publisher = Publisher.create(name="name", city="city")
+        Publisher.update_selected(publisher, "a" * 266, "a" * 266)
+        new_publisher = Publisher.get(Publisher.name == "name",
+                                      Publisher.city == "city")
+        self.assertEqual(new_publisher.name, "name")
+        self.assertEqual(new_publisher.city, "city")
 
 
 if __name__ == '__main__':

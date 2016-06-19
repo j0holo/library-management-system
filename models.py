@@ -65,6 +65,15 @@ class Publisher(BaseModel):
             return publishers
         return None
 
+    @staticmethod
+    def update_selected(publisher_id, name=None, city=None):
+        publisher = Publisher.get(Publisher.id == publisher_id)
+        if name and len(name) <= 265:
+            publisher.name = name
+        if city and len(city) <= 265:
+            publisher.city = city
+        publisher.save()
+
 
 class Author(BaseModel):
     id = PrimaryKeyField()

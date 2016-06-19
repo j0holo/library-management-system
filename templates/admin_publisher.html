@@ -5,6 +5,10 @@
 </head>
 <body>
     <table>
+    <tr>
+        <th>Name</th>
+        <th>City</th>
+    </tr>
     {%  for publisher in publishers %}
         <tr>
             <td>{{ publisher.name }}</td>
@@ -12,5 +16,8 @@
         </tr>
     {% endfor %}
     </table>
+    <br>
+    <br>
+    <a href="{{ url_for('add_new_publisher') }}">Add a new publisher</a>
 </body>
 </html>

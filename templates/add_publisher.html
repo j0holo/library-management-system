@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add new publisher</title>
+</head>
+<body>
+    {% if error %}
+        {{ error }}
+    {% endif %}
+    <form method="POST" action="{{url_for('add_new_publisher')}}">
+        <input type="text" name="name" required>
+        <input type="text" name="city" required>
+        <input type="submit" name="submit" value="Add">
+    </form>
+</body>
+</html>

@@ -29,9 +29,26 @@ def after_request(response):
 def view_publishers():
     publishers = Publisher.select_all()
     if publishers is None:
-        return "No publishers here"
+        return render_template('admin_publisher.html',
+                               publishers=publishers)
     return render_template('admin_publisher.html',
                            publishers=publishers)
+
+@app.route('/admin/publisher/<int:publisher_id>',
+           methods=['GET', 'POST'])
+def update_publisher(publisher_id):
+    error = None
+    if request.method == 'POST':
+        if Publisher.update_selected(publisher_id,
+                                     request.form['name'],
+                                     request.form['city']):
+            return redirect(url_for('view_publishers'))
+        else:
+            error = "Input should be less than 266 characters"
+
+    return render_template('update_publisher.html', error=error,
+                           publisher_id=publisher_id)
+
 
 @app.route('/admin/publisher/add', methods=['GET', 'POST'])
 def add_new_publisher():

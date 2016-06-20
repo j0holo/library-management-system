@@ -4,6 +4,7 @@
     <title>Admin - publishers</title>
 </head>
 <body>
+    {% if publishers %}
     <table>
     <tr>
         <th>Name</th>
@@ -13,9 +14,13 @@
         <tr>
             <td>{{ publisher.name }}</td>
             <td>{{ publisher.city }}</td>
+            <td><a href="{{url_for('update_publisher', 
+                        publisher_id=publisher.id)}}">
+            Update</a></td>
         </tr>
     {% endfor %}
     </table>
+    {% endif %}
     <br>
     <br>
     <a href="{{ url_for('add_new_publisher') }}">Add a new publisher</a>

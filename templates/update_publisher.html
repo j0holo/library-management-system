@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update publisher</title>
+</head>
+<body>
+    <form action="{{url_for('update_publisher', publisher_id=publisher_id)}}" method="POST">
+        <input type="text" name="name">
+        <input type="text" name="city">
+        <input type="submit" name="submit" value="Update">
+    </form>
+</body>
+</html>

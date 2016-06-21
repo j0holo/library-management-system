@@ -89,7 +89,14 @@ class TestPublisherModel(unittest.TestCase):
         publisher_updated = Publisher.update_selected(666, "new_name")
         self.assertFalse(publisher_updated)
 
-    # delete
+    # delete_selected()
+    def test_delete_existing_publisher(self):
+        publisher = Publisher.create(name="name", city="city")
+        self.assertTrue(Publisher.delete_selected(publisher.id))
+
+    def test_delete_non_existing_publisher(self):
+        # publisher = Publisher.create(name="name", city="city")
+        self.assertFalse(Publisher.delete_selected(666))
 
 
 if __name__ == '__main__':

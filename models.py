@@ -79,8 +79,13 @@ class Publisher(BaseModel):
             return None
         return False
 
-    # @staticmethod
-    # def delete
+    @staticmethod
+    def delete_selected(publisher_id):
+        try:
+            Publisher.get(Publisher.id == publisher_id).delete_instance()
+            return True
+        except DoesNotExist:
+            return False
 
 
 class Author(BaseModel):

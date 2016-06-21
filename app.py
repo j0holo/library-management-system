@@ -69,6 +69,16 @@ def add_new_publisher():
             error = "Both fields are required"
     return render_template('add_publisher.html', error=error)
 
+@app.route('/admin/publisher/delete/<int:publisher_id>',
+           methods=['POST'])
+def delete_publisher(publisher_id):
+    if Publisher.delete_selected(publisher_id):
+        flash("Publisher %d has been deleted" % publisher_id)
+        return redirect(url_for('view_publishers'))
+
+    flash("Publisher %d does not exist" % publisher_id)
+    return redirect(url_for('view_publishers'))
+
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

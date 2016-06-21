@@ -85,6 +85,12 @@ class TestPublisherModel(unittest.TestCase):
         self.assertEqual(new_publisher.name, "name")
         self.assertEqual(new_publisher.city, "city")
 
+    def test_update_not_existing(self):
+        publisher_updated = Publisher.update_selected(666, "new_name")
+        self.assertFalse(publisher_updated)
+
+    # delete
+
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

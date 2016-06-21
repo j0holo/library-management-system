@@ -1,5 +1,6 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
+from flask import redirect, url_for, flash
 from models import *
 
 
@@ -28,24 +29,29 @@ def after_request(response):
 @app.route('/admin/publisher')
 def view_publishers():
     publishers = Publisher.select_all()
-    if publishers is None:
-        return render_template('admin_publisher.html',
-                               publishers=publishers)
+    error = None
     return render_template('admin_publisher.html',
-                           publishers=publishers)
+                           publishers=publishers, error=error)
 
 @app.route('/admin/publisher/<int:publisher_id>',
            methods=['GET', 'POST'])
 def update_publisher(publisher_id):
     error = None
     if request.method == 'POST':
-        if Publisher.update_selected(publisher_id,
-                                     request.form['name'],
-                                     request.form['city']):
+        publisher = Publisher.update_selected(
+            publisher_id,
+            request.form['name'],
+            request.form['city']
+        )
+        if publisher or publiser is None:
             return redirect(url_for('view_publishers'))
         else:
             error = "Input should be less than 266 characters"
-
+    try:
+        publisher = Publisher.get(Publisher.id == publisher_id)
+    except Publisher.DoesNotExist:
+        flash("Publisher %d does not exist" % publisher_id)
+        return redirect(url_for('view_publishers'))
     return render_template('update_publisher.html', error=error,
                            publisher_id=publisher_id)
 

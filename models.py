@@ -67,15 +67,20 @@ class Publisher(BaseModel):
 
     @staticmethod
     def update_selected(publisher_id, name=None, city=None):
-        publisher = Publisher.get(Publisher.id == publisher_id)
-        if publisher:
+        try:
+            publisher = Publisher.get(Publisher.id == publisher_id)
             if name and len(name) <= 265:
                 publisher.name = name
             if city and len(city) <= 265:
                 publisher.city = city
             publisher.save()
             return True
+        except Publisher.DoesNotExist:
+            return None
         return False
+
+    # @staticmethod
+    # def delete
 
 
 class Author(BaseModel):

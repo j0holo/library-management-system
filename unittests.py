@@ -98,6 +98,16 @@ class TestPublisherModel(unittest.TestCase):
         # publisher = Publisher.create(name="name", city="city")
         self.assertFalse(Publisher.delete_selected(666))
 
+class TestAuthorModel(unittest.TestCase):
+
+    def setUp(self):
+        db.connect()
+
+    def tearDown(self):
+        q = Author.delete()
+        q.execute()
+        db.close
+
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

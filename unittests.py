@@ -95,7 +95,6 @@ class TestPublisherModel(unittest.TestCase):
         self.assertTrue(Publisher.delete_selected(publisher.id))
 
     def test_delete_non_existing_publisher(self):
-        # publisher = Publisher.create(name="name", city="city")
         self.assertFalse(Publisher.delete_selected(666))
 
 class TestAuthorModel(unittest.TestCase):
@@ -108,6 +107,33 @@ class TestAuthorModel(unittest.TestCase):
         q.execute()
         db.close
 
+    def test_add_author_returns_author(self):
+        new_author = Author.add_author("Mark Luther", "lorem ipsum", 54)
+        self.assertTrue(isinstance(new_author, Author))
+
+    def test_add_author_stored_in_db(self):
+        name = "Mark Luther"
+        biography = "lorem ipsum"
+        age = 54
+        Author.add_author(name, biography, age)
+        author_in_db = Author.get(Author.name == name,
+                                  Author.biography == biography,
+                                  Author.age == 54)
+        self.assertTrue(author_in_db)
+
+    def test_add_author_name_length(self):
+        name = "a" * 266
+        biography = "lorem ipsum"
+        age = 54
+        author_with_long_name = Author.add_author(name, biography, age)
+        self.assertFalse(author_with_long_name)
+
+    def test_add_author_age_must_be_int(self):
+        name = "Mark Luther"
+        biography = "lorem ipsum"
+        age = "number"
+        new_author = Author.add_author(name, biography, age)
+        self.assertFalse(new_author)
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

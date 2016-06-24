@@ -94,6 +94,14 @@ class Author(BaseModel):
     biography = TextField()
     age = SmallIntegerField()
 
+    @staticmethod
+    def add_author(name, biography, age):
+        if len(name) <= 256:
+            try:
+                return Author.create(name=name, biography=biography, age=age)
+            except ValueError:
+                return None
+        return None
 
 class Book(BaseModel):
     id = PrimaryKeyField()

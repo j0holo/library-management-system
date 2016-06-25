@@ -4,6 +4,14 @@
     <title>Update publisher</title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <form action="{{url_for('update_publisher', publisher_id=publisher_id)}}" method="POST">
         <input type="text" name="name">
         <input type="text" name="city">

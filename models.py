@@ -5,6 +5,7 @@ db = MySQLDatabase(None)
 
 
 def refresh_unittest_db():
+    """Drop and create all tables in unittest db."""
     db.init(host=os.getenv('DB_HOST', 'localhost'),
             user='unittest',
             password='test_db',
@@ -24,6 +25,7 @@ def refresh_unittest_db():
 
 
 def refresh_development_db():
+    """Drop and create all tables in development db."""
     db.init(host=os.getenv('DB_HOST', 'localhost'),
             user='development',
             password='devpassword',

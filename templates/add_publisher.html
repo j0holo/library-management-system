@@ -4,9 +4,14 @@
     <title>Add new publisher</title>
 </head>
 <body>
-    {% if error %}
-        {{ error }}
-    {% endif %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
     <form method="POST" action="{{url_for('add_new_publisher')}}">
         <input type="text" name="name" required>
         <input type="text" name="city" required>

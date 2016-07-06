@@ -87,7 +87,7 @@ class Publisher(BaseModel):
             Publisher.get(Publisher.id == publisher_id).delete_instance()
             return True
         except DoesNotExist:
-            return False
+            return None
 
 
 class Author(BaseModel):
@@ -102,7 +102,7 @@ class Author(BaseModel):
             try:
                 return Author.create(name=name, biography=biography, age=age)
             except ValueError:
-                return None
+                return False
         return None
 
 class Book(BaseModel):

@@ -33,15 +33,14 @@ class TestPublisherModel(unittest.TestCase):
         city = "Amsterdam"
         publisher = Publisher.add_publisher(name=publisher_name,
                                             city=city)
-        # publisher should be None
-        self.assertFalse(publisher)
+        self.assertTrue(publisher is None)
 
     def test_add_publisher_city_length(self):
         publisher_name = "British Books"
         city = "a" * 266
         publisher = Publisher.add_publisher(name=publisher_name,
                                             city=city)
-        self.assertFalse(publisher)
+        self.assertTrue(publisher is None)
 
     # select_all()
     def test_select_all_publishers(self):
@@ -87,7 +86,7 @@ class TestPublisherModel(unittest.TestCase):
 
     def test_update_not_existing(self):
         publisher_updated = Publisher.update_selected(666, "new_name")
-        self.assertFalse(publisher_updated)
+        self.assertTrue(publisher_updated is None)
 
     # delete_selected()
     def test_delete_existing_publisher(self):
@@ -95,7 +94,7 @@ class TestPublisherModel(unittest.TestCase):
         self.assertTrue(Publisher.delete_selected(publisher.id))
 
     def test_delete_non_existing_publisher(self):
-        self.assertFalse(Publisher.delete_selected(666))
+        self.assertTrue(Publisher.delete_selected(666) is None)
 
 class TestAuthorModel(unittest.TestCase):
 

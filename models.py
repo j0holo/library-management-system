@@ -102,7 +102,14 @@ class Author(BaseModel):
             try:
                 return Author.create(name=name, biography=biography, age=age)
             except ValueError:
-                return False
+                return ValueError
+        return None
+
+    @staticmethod
+    def select_all():
+        authors = Author.select()
+        if authors:
+            return authors
         return None
 
 class Book(BaseModel):

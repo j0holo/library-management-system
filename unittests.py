@@ -44,10 +44,11 @@ class TestPublisherModel(unittest.TestCase):
 
     # select_all()
     def test_select_all_publishers(self):
-        Publisher.create(name="The German Writters",
+        name = "The German Writters"
+        Publisher.create(name=name,
                          city="Berlin")
         publishers = Publisher.select_all()
-        self.assertTrue(any(publisher.name == "The German Writters"
+        self.assertTrue(any(publisher.name == name
                         for publisher in publishers))
 
     def test_select_all_publishers_no_entries(self):
@@ -106,6 +107,7 @@ class TestAuthorModel(unittest.TestCase):
         q.execute()
         db.close
 
+    # add_author()
     def test_add_author_returns_author(self):
         new_author = Author.add_author("Mark Luther", "lorem ipsum", 54)
         self.assertTrue(isinstance(new_author, Author))
@@ -132,7 +134,20 @@ class TestAuthorModel(unittest.TestCase):
         biography = "lorem ipsum"
         age = "number"
         new_author = Author.add_author(name, biography, age)
-        self.assertFalse(new_author)
+        self.assertTrue(new_author is ValueError)
+
+    # select_all()
+    def test_select_all_authors(self):
+        name = "Mark Luther"
+        Author.create(name=name, biography="lorem ipsum", age=55)
+        authors = Author.select_all()
+        self.assertTrue(any(author.name == name
+                        for author in authors))
+
+    def test_select_all_authors_no_entries(self):
+        authors = Author.select_all()
+        self.assertTrue(authors is None)
+
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

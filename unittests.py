@@ -148,6 +148,39 @@ class TestAuthorModel(unittest.TestCase):
         authors = Author.select_all()
         self.assertTrue(authors is None)
 
+    # update_selected()
+    def test_update_author(self):
+        name = "Plato"
+        biography = "Greek philosopher"
+        age = 67
+        author = Author.create(name=name,
+                               biography=biography,
+                               age=age)
+
+        name = "Friedrich Nietzsche"
+        biography = "lorem ipsum"
+        age = 55
+        Author.update_selected(author, name, biography, age)
+        new_author = Author.get(Author.name == name)
+        self.assertEqual(new_author.name, name)
+        self.assertEqual(new_author.biography, biography)
+        self.assertEqual(new_author.age, age)
+
+    def test_update_only_name(self):
+        pass
+
+    def test_update_only_biography(self):
+        pass
+
+    def test_update_only_age(self):
+        pass
+
+    def test_update_name_length(self):
+        pass
+
+    def test_update_not_existing(self):
+        pass
+
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

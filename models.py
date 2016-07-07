@@ -76,7 +76,7 @@ class Publisher(BaseModel):
             if city and len(city) <= 265:
                 publisher.city = city
             publisher.save()
-            return True
+            return publisher
         except Publisher.DoesNotExist:
             return None
         return False
@@ -111,6 +111,22 @@ class Author(BaseModel):
         if authors:
             return authors
         return None
+
+    @staticmethod
+    def update_selected(author_id, name=None, biography=None, age=None):
+        try:
+            author = Author.get(Author.id == author_id)
+            if name and len(name) <= 256:
+                author.name = name
+            if biography:
+                author.biography = biography
+            if isinstance(age, int):
+                author.age = age
+            author.save()
+            return author
+        except Author.DoesNotExist:
+            return None
+        return False
 
 class Book(BaseModel):
     id = PrimaryKeyField()

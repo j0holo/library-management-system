@@ -1,3 +1,8 @@
+"""Define peewee models for the databases.
+
+Run "python models.py" to update the db's with latest changes
+made to the models.
+"""
 import os
 from peewee import *
 
@@ -5,7 +10,7 @@ db = MySQLDatabase(None)
 
 
 def refresh_unittest_db():
-    """Drop and create all tables in unittest db."""
+    """Rebuild unittest db to apply new model changes."""
     db.init(host=os.getenv('DB_HOST', 'localhost'),
             user='unittest',
             password='test_db',
@@ -13,8 +18,9 @@ def refresh_unittest_db():
             charset='utf8')
     db.connect()
     print("Deleting unittest tables")
-    db.drop_tables([Lend, Administrator, Review, Customer, Genre, BookGenre,
-                   Book, Publisher, Author], safe=True, cascade=True)
+    db.drop_tables([Lend, Administrator, Review, Customer,
+                    Genre, BookGenre, Book, Publisher, Author],
+                   safe=True, cascade=True)
     print("Tables deleted")
     print("Creating new tables")
     db.create_tables([Publisher, Author, Book, Genre,
@@ -25,7 +31,7 @@ def refresh_unittest_db():
 
 
 def refresh_development_db():
-    """Drop and create all tables in development db."""
+    """Rebuild development db to apply new model changes."""
     db.init(host=os.getenv('DB_HOST', 'localhost'),
             user='development',
             password='devpassword',
@@ -50,18 +56,37 @@ class BaseModel(Model):
 
 
 class Publisher(BaseModel):
+    """Publisher model.
+
+    id - primary key of publisher
+    name - name of the publisher
+    city - city where from the publisher operates
+    """
+
     id = PrimaryKeyField()
     name = CharField(max_length=256)
     city = CharField(max_length=256)
 
     @staticmethod
     def add_publisher(name, city):
+        """Add a new publisher.
+
+        name - name of the publisher
+        city - city where from the publisher operates
+        return - a publisher object when succesfull or
+            None when parameter lengths are more than
+            256 chars long
+        """
         if len(name) <= 265 and len(city) <= 256:
             return Publisher.create(name=name, city=city)
         return None
 
     @staticmethod
     def select_all():
+        """Return all publishers.
+
+        return - a SelectQuery obj or None if no publishers where found
+        """
         publishers = Publisher.select()
         if publishers:
             return publishers
@@ -69,6 +94,13 @@ class Publisher(BaseModel):
 
     @staticmethod
     def update_selected(publisher_id, name=None, city=None):
+        """Update the publisher by id.
+
+        name - name of the publisher
+        city - city where from the publisher operates
+        return - a publisher object when succesfull or
+            None when the id does not exist
+        """
         try:
             publisher = Publisher.get(Publisher.id == publisher_id)
             if name and len(name) <= 265:
@@ -79,6 +111,7 @@ class Publisher(BaseModel):
             return publisher
         except Publisher.DoesNotExist:
             return None
+        # I test never is this method returns false (redundant?)
         return False
 
     @staticmethod

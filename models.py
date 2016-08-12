@@ -96,6 +96,7 @@ class Publisher(BaseModel):
     def update_selected(publisher_id, name=None, city=None):
         """Update the publisher by id.
 
+        id - id of the publisher you want to update
         name - name of the publisher
         city - city where from the publisher operates
         return - a publisher object when succesfull or
@@ -116,6 +117,10 @@ class Publisher(BaseModel):
 
     @staticmethod
     def delete_selected(publisher_id):
+        """Delete publisher by id.
+
+        id - unique id of the publiser
+        """
         try:
             Publisher.get(Publisher.id == publisher_id).delete_instance()
             return True
@@ -124,22 +129,42 @@ class Publisher(BaseModel):
 
 
 class Author(BaseModel):
+    """Author model.
+
+    id - primary key of author
+    name - name of the author
+    biograpy - a string of text about the author
+    age - age of the author
+    """
+
     id = PrimaryKeyField()
     name = CharField(max_length=256)
     biography = TextField()
+    # Should be changed to birthdate or born_at
     age = SmallIntegerField()
 
     @staticmethod
     def add_author(name, biography, age):
+        """Add a new author.
+
+        name - name of author
+        biography - string of text about the author
+        age - age of the author
+        """
         if len(name) <= 256:
             try:
                 return Author.create(name=name, biography=biography, age=age)
             except ValueError:
+                # return value error if age is not a integer
                 return ValueError
         return None
 
     @staticmethod
     def select_all():
+        """Return all authors.
+
+        return - a SelectQuery obj or None if no authors where found
+        """
         authors = Author.select()
         if authors:
             return authors
@@ -147,6 +172,14 @@ class Author(BaseModel):
 
     @staticmethod
     def update_selected(author_id, name=None, biography=None, age=None):
+        """Update author by id.
+
+        id - id of the author you want to update
+        name - name of the author
+        biography - string of text about the author
+        age - age of the author
+        return - author obj or None if author does not exist
+        """
         try:
             author = Author.get(Author.id == author_id)
             if name and len(name) <= 256:
@@ -159,6 +192,7 @@ class Author(BaseModel):
             return author
         except Author.DoesNotExist:
             return None
+        # false will never be returned
         return False
 
 class Book(BaseModel):

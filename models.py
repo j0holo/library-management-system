@@ -193,9 +193,28 @@ class Author(BaseModel):
         except Author.DoesNotExist:
             return None
         # false will never be returned
+        # TODO: remove false or make it usefull again
         return False
 
 class Book(BaseModel):
+    """Book model.
+
+    id - unique id of the book
+    isbn - unique ISBN of the book, each type of book has its own
+        ISBN. So hardcover is different compared to paperback
+    title - title of the book
+    author_id - foreign key to the author
+    publisher_id - foreign key to the publisher
+    amount_of_pages - the amount of pages the book contains
+    book_print - from which print the book is e.g. second print
+    edition - from which edition the book is e.g. third edition
+    summary - a summary about the book
+    published_at - date of publishment
+    language - in which language the book has been written
+    book_type - book type: hardcover, paperback, pdf, e-book etc.
+    amount - how many copies the library has
+    """
+
     id = PrimaryKeyField()
     isbn = CharField(unique=True)
     title = CharField(max_length=32)
@@ -208,32 +227,64 @@ class Book(BaseModel):
     summary = TextField()
     published_at = DateField(formats="%Y-%m-%d")
     language = CharField(max_length=64)
-    # types: hardcover, paperback, pdf, e-book etc.
     book_type = CharField(max_length=16)
     amount = SmallIntegerField(default=0)
 
 
 class Genre(BaseModel):
+    """Genre model.
+
+    id - primary key
+    genre - genre of the story
+    """
+
     id = PrimaryKeyField()
     genre = CharField(unique=True)
 
 
 class BookGenre(BaseModel):
+    """BookGenre many-to-many model.
+
+    A book can have multiple genres.
+
+    id - primary key
+    book_id - primary key of the book
+    genre_id - primary key of the genre
+    """
+
     id = PrimaryKeyField()
     book_id = ForeignKeyField(Book)
     genre_id = ForeignKeyField(Genre)
 
 
 class Customer(BaseModel):
+    """Model for customer of the library.
+
+    id - primary key
+    email - email of the customer, max length is 254 chars (RFC 3696)
+    password - the password hashed with bcrypt
+    first_name - name of the customer
+    surname - surname of the customer
+    """
+
     id = PrimaryKeyField()
-    # max length of e-mail address is 256 chars
-    email = CharField(max_length=256)
+    # TODO: update unit test to test 254 instead of 256 chars.
+    email = CharField(max_length=254)
     password = CharField(max_length=128)
     first_name = CharField(max_length=128)
     surname = CharField(max_length=128)
 
 
 class Lend(BaseModel):
+    """Lend model.
+
+    id - primary key
+    book_id - id of the lend book
+    customer_id - id of the customer
+    return_date - date when book should be returned
+    returned_at - date when the book was returned
+    """
+
     id = PrimaryKeyField()
     book_id = ForeignKeyField(Book)
     customer_id = ForeignKeyField(Customer, related_name='borrowed_by')
@@ -242,6 +293,17 @@ class Lend(BaseModel):
 
 
 class Review(BaseModel):
+    """Review model.
+
+    id - primary key
+    customer_id - id of the customer that reviewed the book
+    book_id - id of the book that got reviewed
+    text - review of the book. Maybe change this to 'review', 'text'
+        is to general
+    published_at - date when review got published
+    rating - rating of the book
+    """
+
     id = PrimaryKeyField()
     customer_id = ForeignKeyField(Customer, related_name='reviewed_by')
     book_id = ForeignKeyField(Book)
@@ -251,8 +313,15 @@ class Review(BaseModel):
 
 
 class Administrator(BaseModel):
+    """Administrator model.
+
+    id - primary key
+    email - email of the admin, max length is 254 chars (RFC 3696)
+    password - hashed password with bcrypt
+    """
+
     id = PrimaryKeyField()
-    email = CharField(max_length=256)
+    email = CharField(max_length=254)
     password = CharField(max_length=128)
 
 

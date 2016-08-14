@@ -150,6 +150,20 @@ class TestAuthorModel(unittest.TestCase):
 
     # update_selected()
     def test_update_author(self):
+        name = "Friedrich Nietzsche"
+        biography = "lorem ipsum"
+        age = 55
+        author = Author.create(name=name,
+                               biography=biography,
+                               age=age)
+
+        Author.update_selected(author, name, biography, age)
+        new_author = Author.get(Author.name == name)
+        self.assertEqual(new_author.name, name)
+        self.assertEqual(new_author.biography, biography)
+        self.assertEqual(new_author.age, age)
+
+    def test_update_only_name(self):
         name = "Plato"
         biography = "Greek philosopher"
         age = 67
@@ -158,29 +172,63 @@ class TestAuthorModel(unittest.TestCase):
                                age=age)
 
         name = "Friedrich Nietzsche"
-        biography = "lorem ipsum"
-        age = 55
-        Author.update_selected(author, name, biography, age)
+
+        Author.update_selected(author, name=name)
         new_author = Author.get(Author.name == name)
         self.assertEqual(new_author.name, name)
         self.assertEqual(new_author.biography, biography)
         self.assertEqual(new_author.age, age)
 
-    def test_update_only_name(self):
-        pass
-
     def test_update_only_biography(self):
-        pass
+        name = "Plato"
+        biography = "Greek philosopher"
+        age = 67
+        author = Author.create(name=name,
+                               biography=biography,
+                               age=age)
+
+        biography = "Updated biography"
+
+        Author.update_selected(author, biography=biography)
+        new_author = Author.get(Author.name == name)
+        self.assertEqual(new_author.name, name)
+        self.assertEqual(new_author.biography, biography)
+        self.assertEqual(new_author.age, age)
 
     def test_update_only_age(self):
-        pass
+        name = "Plato"
+        biography = "Greek philosopher"
+        age = 67
+        author = Author.create(name=name,
+                               biography=biography,
+                               age=age)
+
+        age = 31
+
+        Author.update_selected(author, age=age)
+        new_author = Author.get(Author.name == name)
+        self.assertEqual(new_author.name, name)
+        self.assertEqual(new_author.biography, biography)
+        self.assertEqual(new_author.age, age)
 
     def test_update_name_length(self):
-        pass
+        name = "Plato"
+        biography = "Greek philosopher"
+        age = 67
+        author = Author.create(name=name,
+                               biography=biography,
+                               age=age)
+
+        Author.update_selected(author, name="a" * 266)
+        new_author = Author.get(Author.name == name)
+        self.assertEqual(new_author.name, name)
+        self.assertEqual(new_author.biography, biography)
+        self.assertEqual(new_author.age, age)
 
     def test_update_not_existing(self):
-        pass
-
+        self.assertTrue(Author.update_selected(
+                        1, name="does_not_exist")
+                        is None)
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),

@@ -268,7 +268,6 @@ class Customer(BaseModel):
     """
 
     id = PrimaryKeyField()
-    # TODO: update unit test to test 254 instead of 256 chars.
     email = CharField(max_length=254)
     password = CharField(max_length=128)
     first_name = CharField(max_length=128)

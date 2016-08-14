@@ -112,7 +112,7 @@ class Publisher(BaseModel):
             return publisher
         except Publisher.DoesNotExist:
             return None
-        # I test never is this method returns false (redundant?)
+        # false will never be returned, also not tested (redundant?)
         return False
 
     @staticmethod

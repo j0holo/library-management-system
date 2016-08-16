@@ -125,7 +125,7 @@ class Publisher(BaseModel):
             Publisher.get(Publisher.id == publisher_id).delete_instance()
             return True
         except DoesNotExist:
-            return None
+            return False
 
 
 class Author(BaseModel):
@@ -195,6 +195,18 @@ class Author(BaseModel):
         # false will never be returned
         # TODO: remove false or make it usefull again
         return False
+
+    @staticmethod
+    def delete_selected(author_id):
+        """Delete author by id.
+
+        id - unique id of the author
+        """
+        try:
+            Author.get(Author.id == author_id).delete_instance()
+            return True
+        except DoesNotExist:
+            return False
 
 class Book(BaseModel):
     """Book model.

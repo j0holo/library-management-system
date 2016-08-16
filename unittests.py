@@ -95,7 +95,7 @@ class TestPublisherModel(unittest.TestCase):
         self.assertTrue(Publisher.delete_selected(publisher.id))
 
     def test_delete_non_existing_publisher(self):
-        self.assertTrue(Publisher.delete_selected(666) is None)
+        self.assertFalse(Publisher.delete_selected(666))
 
 class TestAuthorModel(unittest.TestCase):
 
@@ -109,7 +109,9 @@ class TestAuthorModel(unittest.TestCase):
 
     # add_author()
     def test_add_author_returns_author(self):
-        new_author = Author.add_author("Mark Luther", "lorem ipsum", 54)
+        new_author = Author.add_author("Mark Luther",
+                                       "lorem ipsum",
+                                       54)
         self.assertTrue(isinstance(new_author, Author))
 
     def test_add_author_stored_in_db(self):
@@ -229,6 +231,16 @@ class TestAuthorModel(unittest.TestCase):
         self.assertTrue(Author.update_selected(
                         1, name="does_not_exist")
                         is None)
+
+    # delete_selected()
+    def test_delete_existing_author(self):
+        author = Author.create(name="Brian",
+                               biography="lorem ipsum",
+                               age=33)
+        self.assertTrue(Author.delete_selected(author.id))
+
+    def test_delete_non_existing_author(self):
+        self.assertFalse(Author.delete_selected(1))
 
 if __name__ == '__main__':
     db.init(host=os.getenv('DB_HOST', 'localhost'),
